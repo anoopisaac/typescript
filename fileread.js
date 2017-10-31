@@ -13,13 +13,14 @@ var userTestStatus = [
     { "id": 1, "name": "Ready" },
     { "id": 2, "name": "Started" }
 ];
-class Test {
-    constructor(hello) {
+var Test = /** @class */ (function () {
+    function Test(hello) {
         this.x = [1, 2, 3];
     }
-    printSomething() {
+    Test.prototype.printSomething = function () {
         console.log("hai");
-    }
-}
+    };
+    return Test;
+}());
 console.log(new Test(2)['x']);
 //# sourceMappingURL=fileread.js.map

@@ -10,27 +10,29 @@ describe("Frog Jump", () => {
     }); 
 
     describe("jumping", () => {
-        console.log("before");
+        console.log("beforeeeeeeeee");
 
         fit("populate board", () => {
+            console.log("reached here...");
+            // while (true) {
+            //     console.log("reached here...");
+                
+            //     //let board: Board = new Board(9, 5, 30, 20, 3);
+            //     //let board: Board = new Board(9, 5, 30, 20, 3);
+            //     //let board: Board = new Board(9, 5, 30, 20, 3);
+            //     let board: Board = new Board(8, 10, 30, 20, 3);
+            //     //board.populateBoard();
+            //     // let frogJump = new FrogJump(board, { row: 0, col: 2 })
+            //     // frogJump.startDigging();
+            //     // console.log(frogJump.completedRoutes.length);
 
-            while (true) {
-                //let board: Board = new Board(9, 5, 30, 20, 3);
-                //let board: Board = new Board(9, 5, 30, 20, 3);
-                //let board: Board = new Board(9, 5, 30, 20, 3);
-                let board: Board = new Board(8, 10, 30, 20, 3);
-                board.populateBoard();
-                let frogJump = new FrogJump(board, { row: 0, col: 2 })
-                frogJump.startDigging();
-                console.log(frogJump.completedRoutes.length);
-
-                if (frogJump.completedRoutes.filter(route => route.cells.length == board.cells.length).length > 0 && 
-                frogJump.completedRoutes.filter(route => route.cells.length == board.cells.length).length <3 &&
-                frogJump.completedRoutes.length>15) {
-                    break;
-                }
+            //     // if (frogJump.completedRoutes.filter(route => route.cells.length == board.cells.length).length > 0 && 
+            //     // frogJump.completedRoutes.filter(route => route.cells.length == board.cells.length).length <3 &&
+            //     // frogJump.completedRoutes.length>15) {
+            //     //     break;
+            //     // }
                
-            }
+            // }
 
 
 
