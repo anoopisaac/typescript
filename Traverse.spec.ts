@@ -48,22 +48,24 @@ describe("Frog Jump", () => {
             }
         });
 
-        fit("check missing cell contributions1", () => {
+        it("check missing cell contributions1", () => {
             console.log("reached here...new..");
-            let board: Board = new Board(9, 5, 30, 20, 3);
+            let board: Board = new Board(9, 5, 40, 20, 3);
             board.populateBoard();
+            var cellStrings:string[]=board.cells.map<string>(cell=>`{row:${cell.row},col:${cell.col}}`)
+            console.log(`[${cellStrings.join(",")}]`);
+            
             let frogJump = new FrogJump(board, { row: -1, col: 3 })
             frogJump.startDigging();
             let successRoutes: Route[] = frogJump.completedRoutes.filter(route => route.cells.length == board.cells.length);
-            successRoutes.forEach(route=>{
-                console.log(`remaining cells length:${route.remainingCells.length}`);
-                
-            })
+            console.log(`success routes:${successRoutes.length} ;total routes :${frogJump.completedRoutes.length}`);
             var routesAfterMissingCellMap:Map<Cell,Route[]>=frogJump.getRoutesAfterMissingCells();
+            console.log("time taken11::" + (new Date().getTime() - start));
             routesAfterMissingCellMap.forEach((routes: Route[], cell: Cell) => {
-                console.log(cell, routes);
-                console.log(`cell:${cell};routes.length :${routes.filter(route=>route.remainingCells.length==0).length}`)
+                //console.log(cell, routes);
+                console.log(`cell:${cell.row+":"+cell.col};success routes :${routes.filter(route=>route.remainingCells.length==0).length};total routes :${routes.length}`)
             });
+            console.log("time taken22::" + (new Date().getTime() - start));
         });
 
         
@@ -84,18 +86,18 @@ describe("Frog Jump", () => {
             //expect(result).toEqual("Hello World");
         });
 
-        it("returns fun", () => {
+        fit("checks path by passing hardcoded cells", () => {
 
             let board: Board = new Board(9, 5, 30, 20, 3);
             //[1, 2], [2, 1], [2, 3], [3, 2]
-            board.cells = [{ row: 1, col: 2 }, { row: 2, col: 1 }, { row: 2, col: 3 }, { row: 3, col: 2 },]
+            board.cells = [{row:1,col:0},{row:1,col:8},{row:2,col:4},{row:3,col:8},{row:1,col:4},{row:2,col:0},{row:2,col:8},{row:3,col:2},{row:0,col:4},{row:4,col:4},{row:2,col:5},{row:1,col:7},{row:1,col:1},{row:3,col:0},{row:3,col:3},{row:0,col:8},{row:2,col:1}]
             //board.populateBoard();
 
             // Arrange
-            let frogJump = new FrogJump(board, { row: 0, col: 2 })
-
-
+            let frogJump = new FrogJump(board, { row: -1, col: 3 })
             frogJump.startDigging();
+            var routes:Route[]=frogJump.completedRoutes;
+            console.log(`success routes :${routes.filter(route=>route.remainingCells.length==0).length};total routes :${routes.length}`)
 
             // Assert
             //expect(result).toEqual("Hello World");
