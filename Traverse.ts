@@ -34,7 +34,8 @@ class Board {
         while (true) {
             this.cells = [];
             var cells: Cell[] = this.getRandomCells(coverageCount);
-            this.cells=this.cells.concat(cells);
+            //this.cells=this.cells.concat(cells);
+            this.cells=cells;
             if (this.cells.filter(cell => cell.col == this.mandatoryCol).length > 0) {
                 break;
             }
@@ -49,8 +50,8 @@ class Board {
         //adding min as 1 as it could be zero, it will never go beyond the max limt even if add one to it as its converted to in the above ine
         var min: number = 1;
         while (cells.length < coverageCount) {
-            var col: number = Math.floor((Math.random() * this.width) + min);
-            var row: number = Math.floor((Math.random() * this.height) + min);
+            var col: number = Math.floor((Math.random() * this.width));
+            var row: number = Math.floor((Math.random() * this.height) );
             if(cells.filter(cell=>cell.row==row&&cell.col==col).length==0)
                 cells.push({ row: row, col: col })
             
@@ -102,6 +103,7 @@ class FrogJump {
 
     startDigging() {
         let neighbors: Cell[] = this.findNeighbors(this.startCell, this.board.cells);
+        
         if (neighbors.length == 0) return;
         let routes: Route[] = [{ cells: neighbors,remainingCells:this.board.cells.filter(cell=>!(cell.row==neighbors[0].row&&cell.col==neighbors[0].col)) }];
         this.digRoutes(routes);
@@ -142,15 +144,76 @@ class FrogJump {
 
     }
 
+    /**
+     * for each route it creates a new set of routes based on neighbors of terminating cell. its like tree branches
+     * @param route 
+     * @param nextGenCells 
+     */
     getNextGenRoutes(route: Route, nextGenCells: Cell[]): Route[] {
         let nextGenRoutes: Route[]=[];
         nextGenCells.forEach(function (nextGenCell) {
+            // slice is created because it creates a new array with a shallow copy of contents,otherwise it will interfere with next iteration
             let nextGenRoute: Route = { cells: route.cells.slice(),remainingCells:route.remainingCells.filter(cell=>!(cell.row==nextGenCell.row&&cell.col==nextGenCell.col)) }
             nextGenRoute.cells.push(nextGenCell);
             nextGenRoutes.push(nextGenRoute);
         })
         return nextGenRoutes;
     }
+
+    /**
+     * trying to find out routes contributed by a specific cell to figure out how many routes difference would it make if one cell is removed
+     */
+    getRoutesAfterMissingCells():Map<Cell,Route[]>{
+        var routesAfterMissingCellMap:Map<Cell,Route[]>=new Map<Cell,Route[]>();
+        this.board.cells.forEach(cell => {
+            var newRoutes:Route[]=this.getRoutesAfterMissingCell(cell);
+            routesAfterMissingCellMap.set(cell,newRoutes);
+        });
+        return routesAfterMissingCellMap;
+    }
+
+    /**
+     * trying to find out routes contributed by a specific cell to figure out how many routes difference would it make if one cell is removed
+     */
+    getRoutesAfterMissingCell(missingCell:Cell):Route[]{
+        var newRoutes:Route[]=[];
+        this.completedRoutes.forEach(route => {
+            var isRouteStillValid:boolean=false;
+            var routeLength:number=route.cells.length;
+            var cellIndex:number=route.cells.indexOf(missingCell);
+            //not present in the route; must be in remaining cells
+            if(cellIndex==-1){
+                isRouteStillValid=true;
+            }
+            //check for last
+            else if(cellIndex==routeLength-1){
+                isRouteStillValid=true;
+            }
+            //first one; only need to check for col as the previous one would have row as -1
+            else if (cellIndex==0){
+                if(missingCell.col==route.cells[cellIndex+1].col){
+                    isRouteStillValid=true;
+                }
+            }
+            //anywhere in between
+            else{
+                var prevCol:number=route.cells[cellIndex-1].col;
+                var proceedCol:number=route.cells[cellIndex+1].col;
+                var prevRow:number=route.cells[cellIndex-1].row;
+                var proceedRow:number=route.cells[cellIndex+1].row;
+                if(prevCol==proceedCol||prevRow==proceedRow){
+                    isRouteStillValid=true;
+                }
+            }
+            
+            if(isRouteStillValid){
+                var newRoute:Route={ cells: route.cells.filter(cell=>!(cell.row==missingCell.row&&cell.col==missingCell.col)),remainingCells:route.remainingCells.filter(cell=>!(cell.row==missingCell.row&&cell.col==missingCell.col)) }
+                newRoutes.push(newRoute)
+            }
+        });
+        return newRoutes;
+    }
+
 
 
 }
