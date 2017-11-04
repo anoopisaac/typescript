@@ -70,7 +70,7 @@ describe("Frog Jump", () => {
 
         fit("do delta adding", () => {
             console.log("reached here...new..");
-            let board: Board = new Board(9, 5, 30, 20, 3);
+            let board: Board = new Board(9, 5, 40, 20, 3);
             board.populateBoard();
             var cellStrings:string[]=board.cells.map<string>(cell=>`{row:${cell.row},col:${cell.col}}`)
             console.log(`[${cellStrings.join(",")}]`);
@@ -80,15 +80,20 @@ describe("Frog Jump", () => {
             let successRoutes: Route[] = frogJump.completedRoutes.filter(route => route.remainingCells.length==0);
             console.log(`success routes:${successRoutes.length} ;total routes :${frogJump.completedRoutes.length}`);
             var emptyCells:Cell[]=frogJump.getEmptyCells();
+            //var emptyCells:Cell[]=[];
             emptyCells.forEach(cell=>{
+                console.log("in delta");
+                
                 let deltaBoard=new Board();
-                deltaBoard.cells=board.cells;
+                deltaBoard.cells=board.cells.slice();
                 deltaBoard.cells.push(cell)
                 let deltaFrogJump = new FrogJump(deltaBoard, { row: -1, col: 3 })
                 deltaFrogJump.startDigging();
                 let successRoutes: Route[] = deltaFrogJump.completedRoutes.filter(route => route.remainingCells.length==0);
-                console.log(`delta success routes:${successRoutes.length} ;delta total routes :${frogJump.completedRoutes.length}`);
+                console.log(`delta success routes:${successRoutes.length} ;delta total routes :${deltaFrogJump.completedRoutes.length} neighbors:${deltaFrogJump.findNeighbors(cell,deltaBoard.cells).length};total cells:${deltaBoard.cells.length}`);
             })
+            console.log("done");
+            
            
         });
 

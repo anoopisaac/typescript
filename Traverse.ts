@@ -19,7 +19,7 @@ class Board {
     maxCoverPerc: number = 15;
     minCoverPerc: number = 10;
     mandatoryCol: number;
-    constructor(width, height, maxCoverPerc, minCoverPerc, mandatoryCol) {
+    constructor(width?, height?, maxCoverPerc?, minCoverPerc?, mandatoryCol?) {
         this.width = width;
         this.height = height;
         this.maxCoverPerc = maxCoverPerc;
