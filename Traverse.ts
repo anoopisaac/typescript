@@ -109,6 +109,22 @@ class FrogJump {
         this.digRoutes(routes);
     }
 
+    getEmptyCells():Cell[] {
+        //var allCells:Cell[]=
+        var board:Board=this.board;
+        var allCells:Cell[]=new Array(this.board.width*this.board.height).fill(0).map((value, index) => {
+            return  {row:parseInt(`${index/board.width}`),col:index%board.width}
+        })
+        var emptyCells:Cell[]=[];
+        allCells.forEach(allCell=>{
+            if(board.cells.find(cell=>cell.row==allCell.row&&cell.col==allCell.col)==null){
+                emptyCells.push(allCell)
+            }
+        })
+           
+        return emptyCells;
+    }
+
 
     digRoutes(routes: Route[]) {
         let frogJump = this;

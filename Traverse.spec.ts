@@ -68,6 +68,30 @@ describe("Frog Jump", () => {
             console.log("time taken22::" + (new Date().getTime() - start));
         });
 
+        fit("do delta adding", () => {
+            console.log("reached here...new..");
+            let board: Board = new Board(9, 5, 30, 20, 3);
+            board.populateBoard();
+            var cellStrings:string[]=board.cells.map<string>(cell=>`{row:${cell.row},col:${cell.col}}`)
+            console.log(`[${cellStrings.join(",")}]`);
+            
+            let frogJump = new FrogJump(board, { row: -1, col: 3 })
+            frogJump.startDigging();
+            let successRoutes: Route[] = frogJump.completedRoutes.filter(route => route.remainingCells.length==0);
+            console.log(`success routes:${successRoutes.length} ;total routes :${frogJump.completedRoutes.length}`);
+            var emptyCells:Cell[]=frogJump.getEmptyCells();
+            emptyCells.forEach(cell=>{
+                let deltaBoard=new Board();
+                deltaBoard.cells=board.cells;
+                deltaBoard.cells.push(cell)
+                let deltaFrogJump = new FrogJump(deltaBoard, { row: -1, col: 3 })
+                deltaFrogJump.startDigging();
+                let successRoutes: Route[] = deltaFrogJump.completedRoutes.filter(route => route.remainingCells.length==0);
+                console.log(`delta success routes:${successRoutes.length} ;delta total routes :${frogJump.completedRoutes.length}`);
+            })
+           
+        });
+
         
         console.log("after");
 
@@ -86,7 +110,7 @@ describe("Frog Jump", () => {
             //expect(result).toEqual("Hello World");
         });
 
-        fit("checks path by passing hardcoded cells", () => {
+        it("checks path by passing hardcoded cells", () => {
 
             let board: Board = new Board(9, 5, 30, 20, 3);
             //[1, 2], [2, 1], [2, 3], [3, 2]
